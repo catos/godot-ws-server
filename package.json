@@ -1,0 +1,23 @@
+{
+  "name": "godot-ws-server",
+  "version": "1.0.0",
+  "description": "description",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/catos/godot-ws-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/catos/godot-ws-server/issues"
+  },
+  "homepage": "https://github.com/catos/godot-ws-server#readme",
+  "dependencies": {
+    "socket.io": "^2.0.3"
+  }
+}
