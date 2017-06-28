@@ -1,16 +1,30 @@
-var server = require('http').createServer();
-var io = require('socket.io')(server);
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
 
-io.on('connection', function (client) {
-	
-	client.on('event', function (data) {
-		console.log('client event', data);
-	});
+var connections = []
 
-	client.on('disconnect', function () { 
-		console.log('client disconnect');
-	});
+app.get('/', function(req, res) {
+	res.sendFile(__dirname + '/index.html')
+})
 
-});
+io.on('connection', (socket) => {
+	connections.push(socket)
+	console.log('Connected: %s clients connected', connections.length)
 
-server.listen(3000);
+	socket.on('message', function (message) {
+		console.log('message from client: ', message)
+	})
+
+	socket.on('disconnect', (reason) => { 
+		connections.splice(connections.indexOf(socket), 1)
+		console.log('client disconnect, reason: ', reason)
+	})
+
+	// Disconnect clients after 5 seconds
+	// setTimeout(() => socket.disconnect(true), 5000)
+})
+
+server.listen(3000, _ => {
+	console.log('listening on *:3000')
+})

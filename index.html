@@ -1,0 +1,40 @@
+<html>
+
+<head>
+	<title>Socket.IO server</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+		<ul id="messages"></ul>
+		<form action="">
+			<label for="message">Message</label>
+			<div class="input-group">
+				<input type="text" id="message" class="form-control input-lg" value="Sample message...">
+				<span class="input-group-btn">
+					<button class="btn btn-lg">Send</button>
+				</span>
+			</div>
+		</form>
+	</div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+		$(document).on('ready', _ => {
+			var socket = io()
+
+			$('form').on('submit', _ => {
+				$m = $('#message')
+				socket.emit('message', $m.val())
+				console.log('sending message to server: ' + $m.val())
+				$m.val('')
+				return false
+			})
+		})
+	</script>
+</body>
+
+</html>
