@@ -2,6 +2,8 @@ var app = require('express')()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 
+var port = process.env.PORT || 80
+
 var connections = []
 
 app.get('/', function(req, res) {
@@ -25,6 +27,6 @@ io.on('connection', (socket) => {
 	// setTimeout(() => socket.disconnect(true), 5000)
 })
 
-server.listen(3000, _ => {
-	console.log('listening on *:3000')
+server.listen(port, _ => {
+	console.log('listening on *:' + port)
 })
