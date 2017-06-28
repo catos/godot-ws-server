@@ -13,10 +13,11 @@ app.get('/', function(req, res) {
 io.on('connection', (socket) => {
 	connections.push(socket)
 	console.log('Connected: %s clients connected', connections.length)
+	io.emit('message', 'server: listening on port: ' + port)
 
 	socket.on('message', function (message) {
 		console.log('message from client: ', message)
-		io.emit('message', 'echo from server, message: ' + message)
+		io.emit('message', 'server: ' + message)
 	})
 
 	socket.on('disconnect', (reason) => { 
