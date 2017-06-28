@@ -2,7 +2,7 @@ var app = require('express')()
 var server = require('http').Server(app)
 var io = require('socket.io')(server)
 
-var port = process.env.PORT || 80
+var port = process.env.PORT || 3000
 
 var connections = []
 
@@ -16,6 +16,7 @@ io.on('connection', (socket) => {
 
 	socket.on('message', function (message) {
 		console.log('message from client: ', message)
+		io.emit('message', 'echo from server, message: ' + message)
 	})
 
 	socket.on('disconnect', (reason) => { 

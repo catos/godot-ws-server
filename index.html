@@ -8,7 +8,6 @@
 
 <body>
 	<div class="container">
-		<ul id="messages"></ul>
 		<form action="">
 			<label for="message">Message</label>
 			<div class="input-group">
@@ -18,6 +17,8 @@
 				</span>
 			</div>
 		</form>
+		<hr />
+		<ul id="messages"></ul>
 	</div>
 
 	<script src="/socket.io/socket.io.js"></script>
@@ -33,6 +34,10 @@
 				$m.val('')
 				return false
 			})
+
+			socket.on('message', function (message) {
+				$('#messages').append($('<li>').text(message));
+			});
 		})
 	</script>
 </body>
