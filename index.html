@@ -27,7 +27,8 @@
 	<script>
 		$(document).on('ready', _ => {
 			// Create WebSocket connection.
-			const socket = new WebSocket('ws://localhost:3000');
+			// const socket = new WebSocket('ws://localhost:3000');
+			const socket = new WebSocket('ws://godot-ws-server.herokuapp.com');
 
 			// Connection opened
 			socket.addEventListener('open', function (event) {
@@ -38,7 +39,7 @@
 			socket.addEventListener('message', function (event) {
 				const timestamp = new Date().getTime()
 				const response = JSON.parse(event.data)
-				
+
 				if (response.type === 'time') {
 					$('#time').text(response.message)
 				} else {
