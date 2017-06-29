@@ -15,6 +15,12 @@ wss.on('connection', function connection(ws, req) {
 	//const location = url.parse(req.url, true);
 	// You might use location.query.access_token to authenticate or share sessions 
 	// or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+	const response = {
+		timestamp: new Date().getTime(),
+		type: 'chat',
+		message: 'client connected'
+	}
+	ws.send(JSON.stringify(response))
 	console.log('client connected')
 
 	ws.on('close', _ => {
