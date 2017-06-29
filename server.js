@@ -1,34 +1,56 @@
-var app = require('express')()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
+const app = require('express')()
+const http = require('http')
+const WebSocket = require('ws')
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
 
-var port = process.env.PORT || 3000
+const port = process.env.PORT || 3000
+var intervalId;
 
-var connections = []
-
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 	res.sendFile(__dirname + '/index.html')
 })
 
-io.on('connection', (socket) => {
-	connections.push(socket)
-	console.log('Connected: %s clients connected', connections.length)
-	io.emit('message', 'server: listening on port: ' + port)
+wss.on('connection', function connection(ws, req) {
+	//const location = url.parse(req.url, true);
+	// You might use location.query.access_token to authenticate or share sessions 
+	// or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+	console.log('client connected')
 
-	socket.on('message', function (message) {
-		console.log('message from client: ', message)
-		io.emit('message', 'server: ' + message)
+	ws.on('close', _ => {
+		if (intervalId) {
+			clearInterval(intervalId)
+		}
+		console.log('client disconnected')
 	})
 
-	socket.on('disconnect', (reason) => { 
-		connections.splice(connections.indexOf(socket), 1)
-		console.log('client disconnect, reason: ', reason)
-	})
+	ws.on('message', function incoming(message) {
+		const response = {
+			timestamp: new Date().getTime(),
+			type: 'chat',
+			message: message
+		}
+		ws.send(JSON.stringify(response))
+		console.log('received: %s', message)
+		// console.log(req);
+	});
 
-	// Disconnect clients after 5 seconds
-	// setTimeout(() => socket.disconnect(true), 5000)
-})
+	intervalId = setInterval(_ => {
+		try {
+			const now = new Date()
+			const response = {
+				timestamp: new Date().getTime(),
+				type: 'time',
+				message: now.toString()
+			}
+			ws.send(JSON.stringify(response))
+		} catch (e) {
+			console.log('error: %s', e)
+		}
+	}, 1000)
 
-server.listen(port, _ => {
-	console.log('listening on *:' + port)
-})
+});
+
+server.listen(port, function listening() {
+	console.log('Listening on %d', server.address().port);
+});

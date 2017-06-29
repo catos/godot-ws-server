@@ -19,6 +19,7 @@
   "homepage": "https://github.com/catos/godot-ws-server#readme",
   "dependencies": {
     "express": "^4.15.3",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "ws": "^3.0.0"
   }
 }
