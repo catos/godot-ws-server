@@ -20,7 +20,12 @@ wss.on('connection', function connection(ws, req) {
 		type: 'chat',
 		message: 'client connected...server running on port: ' + port
 	}
-	ws.send(JSON.stringify(response))
+	// ws.send(JSON.stringify(response))
+	wss.clients.forEach(function each(client) {
+		if (client.readyState === WebSocket.OPEN) {
+			client.send(JSON.stringify(response))
+		}
+	})
 	console.log('client connected')
 
 	ws.on('close', _ => {
@@ -36,7 +41,12 @@ wss.on('connection', function connection(ws, req) {
 			type: 'chat',
 			message: message
 		}
-		ws.send(JSON.stringify(response))
+		// ws.send(JSON.stringify(response))
+		wss.clients.forEach(function each(client) {
+			if (client.readyState === WebSocket.OPEN) {
+				client.send(JSON.stringify(response))
+			}
+		})
 		console.log('received: %s', message)
 		// console.log(req);
 	});
@@ -49,7 +59,12 @@ wss.on('connection', function connection(ws, req) {
 				type: 'time',
 				message: now.toString()
 			}
-			ws.send(JSON.stringify(response))
+			// ws.send(JSON.stringify(response))
+			wss.clients.forEach(function each(client) {
+				if (client.readyState === WebSocket.OPEN) {
+					client.send(JSON.stringify(response))
+				}
+			})
 		} catch (e) {
 			console.log('error: %s', e)
 		}
