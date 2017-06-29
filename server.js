@@ -15,17 +15,8 @@ wss.on('connection', function connection(ws, req) {
 	//const location = url.parse(req.url, true);
 	// You might use location.query.access_token to authenticate or share sessions 
 	// or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-	const response = {
-		timestamp: new Date().getTime(),
-		type: 'chat',
-		message: 'client connected...server running on port: ' + port
-	}
-	// ws.send(JSON.stringify(response))
-	wss.clients.forEach(function each(client) {
-		if (client.readyState === WebSocket.OPEN) {
-			client.send(JSON.stringify(response))
-		}
-	})
+
+	broadcast('chat', 'client connected...server running on port: ' + port)
 	console.log('client connected')
 
 	ws.on('close', _ => {
@@ -36,41 +27,32 @@ wss.on('connection', function connection(ws, req) {
 	})
 
 	ws.on('message', function incoming(message) {
-		const response = {
-			timestamp: new Date().getTime(),
-			type: 'chat',
-			message: message
-		}
-		// ws.send(JSON.stringify(response))
-		wss.clients.forEach(function each(client) {
-			if (client.readyState === WebSocket.OPEN) {
-				client.send(JSON.stringify(response))
-			}
-		})
-		console.log('received: %s', message)
-		// console.log(req);
+		broadcast('chat', message)
 	});
 
 	intervalId = setInterval(_ => {
 		try {
-			const now = new Date()
-			const response = {
-				timestamp: new Date().getTime(),
-				type: 'time',
-				message: now.toString()
-			}
-			// ws.send(JSON.stringify(response))
-			wss.clients.forEach(function each(client) {
-				if (client.readyState === WebSocket.OPEN) {
-					client.send(JSON.stringify(response))
-				}
-			})
+			broadcast('time', new Date().toString())
 		} catch (e) {
 			console.log('error: %s', e)
 		}
 	}, 1000)
 
 });
+
+function broadcast(type, message) {
+	const response = {
+		timestamp: new Date().getTime(),
+		type: 'time',
+		message: message
+	}
+	wss.clients.forEach(function each(client) {
+		if (client.readyState === WebSocket.OPEN) {
+			client.send(JSON.stringify(response))
+		}
+	})
+	console.log('broadcast: %s', message)	
+}
 
 server.listen(port, function listening() {
 	console.log('Listening on %d', server.address().port);
