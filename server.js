@@ -18,7 +18,7 @@ wss.on('connection', function connection(ws, req) {
 	const response = {
 		timestamp: new Date().getTime(),
 		type: 'chat',
-		message: 'client connected'
+		message: 'client connected...server running on port: ' + port
 	}
 	ws.send(JSON.stringify(response))
 	console.log('client connected')
