@@ -43,7 +43,7 @@ wss.on('connection', function connection(ws, req) {
 function broadcast(type, message) {
 	const response = {
 		timestamp: new Date().getTime(),
-		type: 'time',
+		type: type,
 		message: message
 	}
 	wss.clients.forEach(function each(client) {
